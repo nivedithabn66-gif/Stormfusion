@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-app: #EBF1F6;
+    --text-app: #0F172A;
+  }
+  .dark {
+    --bg-app: #080C14;
+    --text-app: #F1F5F9;
+  }
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-app);
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+/* Custom Tactical Glassmorphism & Borders */
+/* Light Mode: Professional meteorological command center operations dashboard */
+.command-card {
+  background: #FFFFFF;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+  color: #0F172A;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.command-card:hover {
+  border-color: #0284C7;
+  box-shadow: 0 6px 18px -2px rgba(2, 132, 199, 0.12), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+}
+
+.command-card-glow {
+  background: #FFFFFF;
+  border: 1px solid #0284C7;
+  box-shadow: 0 0 16px rgba(2, 132, 199, 0.2);
+}
+
+/* Dark Mode command-card */
+.dark .command-card {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.45);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  color: #F1F5F9;
+}
+
+.dark .command-card:hover {
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+.dark .command-card-glow {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+}
+
+/* Radar pulse animation for Leaflet & UI markers */
+@keyframes radar-ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.animate-radar-ping {
+  animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #080C14;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Leaflet dark & light theme adjustments */
+.leaflet-container {
+  background-color: #E2E8F0 !important;
+  font-family: inherit;
+}
+
+.dark .leaflet-container {
+  background-color: #06090e !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1px solid #CBD5E1 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15) !important;
+}
+
+.leaflet-popup-tip {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background: #0F172A !important;
+  color: #F1F5F9 !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark .leaflet-popup-tip {
+  background: #0F172A !important;
+  border: 1px solid #334155 !important;
+}
+
+/* ======================================================== */
+/* REALISTIC CYCLONE VORTEX VISUALIZATION ON GIS MAP */
+/* ======================================================== */
+
+@keyframes cyclone-vortex-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes cyclone-logo-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes eye-core-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 14px rgba(244, 63, 94, 0.8), inset 0 0 8px rgba(244, 63, 94, 0.6);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 24px rgba(244, 63, 94, 1), inset 0 0 12px rgba(244, 63, 94, 0.9);
+  }
+}
+
+@keyframes vector-flow-pulse {
+  0% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+}
+
+/* Vortex rotating layer */
+.cyclone-vortex-spin {
+  animation: cyclone-vortex-rotation 16s linear infinite;
+  transform-origin: center center;
+}
+
+.cyclone-logo-spin {
+  animation: cyclone-logo-rotation 14s linear infinite;
+  transform-origin: center center;
+}
+
+.cyclone-eye-pulse {
+  animation: eye-core-pulse 2.8s ease-in-out infinite;
+}
+
+.cyclone-vector-pulse {
+  animation: vector-flow-pulse 2s ease-in-out infinite;
+}
+
+/* Leaflet Custom Realistic Cyclone Vortex Icon container */
+.realistic-cyclone-vortex {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.realistic-cyclone-vortex svg {
+  overflow: visible;
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.25)) drop-shadow(0 4px 14px rgba(2, 6, 23, 0.45));
+}
+
+/* Support for users with reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .cyclone-vortex-spin,
+  .cyclone-logo-spin,
+  .cyclone-eye-pulse,
+  .cyclone-vector-pulse,
+  .animate-radar-ping {
+    animation: none !important;
+  }
+}
+

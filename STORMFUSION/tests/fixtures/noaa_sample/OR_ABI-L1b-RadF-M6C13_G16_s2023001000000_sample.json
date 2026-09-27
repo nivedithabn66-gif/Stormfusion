@@ -1,0 +1,19 @@
+{
+  "title": "NOAA GOES-16 ABI Level-1B Radiances",
+  "platform": "GOES-16",
+  "instrument": "ABI",
+  "channel": "ABI_CH13",
+  "central_wavelength_um": 10.3,
+  "spatial_resolution_km": 2.0,
+  "units": "mW m-2 sr-1 (cm-1)-1",
+  "scale_factor": 0.05,
+  "add_offset": 10.0,
+  "valid_range": [
+    0,
+    16383
+  ],
+  "fill_value": -999.0,
+  "source": "NOAA_GOES",
+  "coverage_status": "DEVELOPMENT_ONLY",
+  "NIO_OPERATIONAL_COMPATIBILITY": false
+}

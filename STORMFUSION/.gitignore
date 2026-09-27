@@ -1,0 +1,91 @@
+# ==============================================================================
+# STORMFUSION Package .gitignore
+# ==============================================================================
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables & Credentials
+# IMPORTANT: Never commit MOSDAC credentials, CDS credentials, API tokens, passwords, or secrets!
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+!**/.env.example
+config.json
+**/config.json
+*.pem
+credentials.json
+*.key
+*.secret
+.cdsapirc
+env.txt
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.project
+*.pydevproject
+
+# OS temporary files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs & Checkpoints
+logs/*
+!logs/.gitkeep
+checkpoints/*
+!checkpoints/.gitkeep
+*.log
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.onnx
+*.engine
+
+# Large Raw & Processed Datasets (keep directory structure via .gitkeep)
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/**/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/**/.gitkeep
+
+data/splits/*
+!data/splits/.gitkeep
+
+# Large satellite data files
+*.nat
+*.nc
+*.grib
+*.grib2
+*.tar
+*.tar.gz
+*.zip
+
+# Frontend build & dependencies
+node_modules/
+dist/
+dist-ssr/
+build/
+
+# Jupyter Notebook Checkpoints & Temp Files
+.ipynb_checkpoints/
+*.tmp
+*.temp

@@ -1,0 +1,120 @@
+# ==============================================================================
+# STORMFUSION Root .gitignore
+# ==============================================================================
+
+# --- Environment variables & Secrets (CRITICAL: NEVER COMMIT) ---
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+!**/.env.example
+*.pem
+*.key
+*.cert
+*.secret
+*credentials*.json
+serviceAccountKey*.json
+.cdsapirc
+env.txt
+config.json
+**/config.json
+
+# --- Python & Virtual Environments ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# --- Node.js & Frontend Build Outputs ---
+node_modules/
+dist/
+dist-ssr/
+build/
+out/
+.pnp
+.pnp.js
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Model Checkpoints & Large Weights ---
+checkpoints/*
+!checkpoints/.gitkeep
+!checkpoints/**/.gitkeep
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.onnx
+*.engine
+
+# --- Large Satellite & Meteorological Datasets ---
+*.nat
+*.nc
+*.grib
+*.grib2
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/**/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/**/.gitkeep
+
+data/splits/*
+!data/splits/.gitkeep
+
+# --- Database & Local Storage ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Logs & Monitoring ---
+logs/*
+!logs/.gitkeep
+*.log
+
+# --- IDEs, Editors & Operating System ---
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.project
+*.pydevproject
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+.Spotlight-V100
+.Trashes
+
+# --- Jupyter Notebooks & Temp Files ---
+.ipynb_checkpoints/
+*.tmp
+*.temp
+scratch/

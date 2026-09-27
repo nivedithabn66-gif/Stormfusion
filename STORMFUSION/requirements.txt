@@ -1,0 +1,31 @@
+# STORMFUSION Production & Runtime Dependencies
+# ==============================================================================
+
+# Core ML & Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Scientific Computing & Data Processing
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+scikit-learn>=1.2.0
+
+# Multi-dimensional & Meteorological Data Formats
+xarray>=2023.1.0
+netCDF4>=1.6.0
+h5py>=3.8.0
+
+# Visualization & Configuration
+matplotlib>=3.7.0
+PyYAML>=6.0
+
+# Inference API Backend & Web Server
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+sqlalchemy>=2.0.0
+websockets>=11.0
+requests>=2.31.0
+python-multipart>=0.0.6

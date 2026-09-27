@@ -1,0 +1,247 @@
+# ============================================================
+# STORMFUSION — Target Label Configuration
+# Step 15: Cyclone Target & Label Engineering
+# ============================================================
+#
+# This file is the authoritative source of truth for all
+# target label definitions used in STORMFUSION.
+# DO NOT hard-code label logic inside the model.
+# Any changes to category definitions must be made here.
+#
+# CRITICAL: pattern_scheme_status is PENDING.
+# No pattern class labels may be assigned for scientific
+# training until a domain expert validates the grouping.
+# ============================================================
+
+# ------------------------------------------------------------
+# FORECAST HORIZONS
+# ------------------------------------------------------------
+forecast_horizons_hours:
+  - 3
+  - 6
+  - 12
+  - 24
+
+# ------------------------------------------------------------
+# TEMPORAL RESOLUTION
+# ------------------------------------------------------------
+time_resolution_hours: 3
+history_timesteps: 8         # t-21h, t-18h, ..., t0
+
+# ------------------------------------------------------------
+# DETECTION LABEL
+# ------------------------------------------------------------
+detection:
+  label_name: "detection_label"
+  positive_value: 1          # cyclone / storm present
+  negative_value: 0          # non-cyclone hard negative
+  #
+  # Rule (exact):
+  #   detection_label = 1 IFF:
+  #     (a) sequence storm_id is present in ibtracs_nio_clean.csv
+  #         with basin = 'NI', AND
+  #     (b) reference_time (T0) falls within [storm.start_time, storm.end_time], AND
+  #     (c) the IBTrACS observation at T0 (±15 min tolerance) has a non-empty nature code.
+  #
+  #   For the current manifest all sequences are cyclone-positive (no hard negatives yet).
+  #   Hard-negative infrastructure is documented but not yet populated.
+  #   Future hard negatives will include organised convection non-cyclonic systems
+  #   verified from independent data sources only.
+  #
+  detection_rule: "ibtracs_nio_storm_id_present_and_within_track_span_and_nature_not_empty"
+  hard_negatives_status: "NOT_YET_POPULATED"
+  hard_negatives_policy: >
+    Hard negatives must be drawn from independently verified data sources
+    (e.g. IMD disturbance records, satellite-based convection catalogues).
+    Random tensor generation is strictly prohibited for hard-negative production.
+
+# ------------------------------------------------------------
+# PATTERN / CATEGORY CLASSIFICATION
+# ------------------------------------------------------------
+pattern:
+  label_name: "pattern_label"
+  label_status_field: "pattern_label_status"
+
+  # PENDING sentinel value stored in pattern_label column
+  pending_sentinel: -1
+
+  # -------------------------------------------------------
+  # SCHEME STATUS — MUST be changed to VALIDATED by a
+  # domain expert before class labels are used for training.
+  # -------------------------------------------------------
+  pattern_scheme_status: "PENDING"
+  pattern_scheme_version: null
+  pattern_scheme_approver: null
+  pattern_scheme_approval_date: null
+
+  # -------------------------------------------------------
+  # IMD / RSMC NIO Classification Reference (7 classes)
+  # Source: India Meteorological Department classification
+  # for cyclonic disturbances over the North Indian Ocean.
+  # Listed FOR REFERENCE ONLY — not yet mapped to labels.
+  # -------------------------------------------------------
+  imd_classification_reference:
+    # Class name            Wind speed threshold (knots)   IBTrACS nature approx.
+    Depression:
+      wind_max_kts: 27
+      ibtracs_nature_hint: "DS"
+      description: "Maximum sustained wind <= 27 knots"
+    Deep_Depression:
+      wind_range_kts: [28, 33]
+      ibtracs_nature_hint: "DS"
+      description: "Maximum sustained wind 28–33 knots"
+    Cyclonic_Storm:
+      wind_range_kts: [34, 47]
+      ibtracs_nature_hint: "TS"
+      description: "Maximum sustained wind 34–47 knots"
+    Severe_Cyclonic_Storm:
+      wind_range_kts: [48, 63]
+      ibtracs_nature_hint: "TS"
+      description: "Maximum sustained wind 48–63 knots"
+    Very_Severe_Cyclonic_Storm:
+      wind_range_kts: [64, 89]
+      ibtracs_nature_hint: "TS"
+      description: "Maximum sustained wind 64–89 knots"
+    Extremely_Severe_Cyclonic_Storm:
+      wind_range_kts: [90, 119]
+      ibtracs_nature_hint: "TS"
+      description: "Maximum sustained wind 90–119 knots"
+    Super_Cyclonic_Storm:
+      wind_min_kts: 120
+      ibtracs_nature_hint: "TS"
+      description: "Maximum sustained wind >= 120 knots"
+
+  # -------------------------------------------------------
+  # Provisional mapping — NOT ACTIVE (status = PENDING)
+  # Will be populated once domain expert validates grouping.
+  # The model head currently has 4 output classes (placeholder).
+  # -------------------------------------------------------
+  provisional_mapping_4class:
+    # These definitions are PENDING expert validation.
+    # Do NOT use these labels for scientific training.
+    status: "PENDING — DO NOT USE FOR TRAINING"
+    classes:
+      0:
+        name: "Depression_or_Deep_Depression"
+        imd_categories: ["Depression", "Deep_Depression"]
+        wind_max_kts: 33
+      1:
+        name: "Cyclonic_Storm"
+        imd_categories: ["Cyclonic_Storm"]
+        wind_range_kts: [34, 47]
+      2:
+        name: "Severe_or_Very_Severe_Cyclonic_Storm"
+        imd_categories: ["Severe_Cyclonic_Storm", "Very_Severe_Cyclonic_Storm"]
+        wind_range_kts: [48, 89]
+      3:
+        name: "Extremely_Severe_or_Super_Cyclonic_Storm"
+        imd_categories: ["Extremely_Severe_Cyclonic_Storm", "Super_Cyclonic_Storm"]
+        wind_min_kts: 90
+
+# ------------------------------------------------------------
+# INTENSITY TARGET
+# ------------------------------------------------------------
+intensity:
+  source_variable: "usa_wind"       # Primary source in IBTrACS
+  fallback_variable: "wmo_wind"     # Fallback if usa_wind absent
+  units: "knots"                    # Original IBTrACS units — preserved as-is
+  normalization_status: "NOT_APPLIED_AWAITING_REAL_TRAINING_DATA"
+  # Normalization must be computed ONLY from training-set statistics
+  # using verified real data. Placeholder statistics are prohibited.
+  t0_column: "wind_t"              # Column in sequence_manifest.csv
+  future_columns:
+    t3h: "target_wind_t3"
+    t6h: "target_wind_t6"
+    t12h: "target_wind_t12"
+    t24h: "target_wind_t24"
+  validity_mask_columns:
+    t0: "intensity_valid_t0"
+    t3h: "intensity_valid_t3h"
+    t6h: "intensity_valid_t6h"
+    t12h: "intensity_valid_t12h"
+    t24h: "intensity_valid_t24h"
+  qc:
+    min_kts: 0.0
+    max_kts: 250.0
+
+# ------------------------------------------------------------
+# PRESSURE TARGET
+# ------------------------------------------------------------
+pressure:
+  source_variable: "usa_pres"      # Primary source in IBTrACS
+  fallback_variable: "wmo_pres"    # Fallback if usa_pres absent
+  units: "hPa"                     # Original IBTrACS units — preserved as-is
+  normalization_status: "NOT_APPLIED_AWAITING_REAL_TRAINING_DATA"
+  missing_policy: "PRESERVE_NAN"   # Do NOT impute missing pressure values
+  t0_column: "pressure_t"
+  future_columns:
+    t3h: "target_pressure_t3"
+    t6h: "target_pressure_t6"
+    t12h: "target_pressure_t12"
+    t24h: "target_pressure_t24"
+  validity_mask_columns:
+    t0: "pressure_valid_t0"
+    t3h: "pressure_valid_t3h"
+    t6h: "pressure_valid_t6h"
+    t12h: "pressure_valid_t12h"
+    t24h: "pressure_valid_t24h"
+  qc:
+    min_hpa: 800.0
+    max_hpa: 1050.0
+
+# ------------------------------------------------------------
+# TRACK TARGET
+# ------------------------------------------------------------
+track:
+  representation: "delta_and_absolute"
+  # delta_lat = future_lat - T0_lat
+  # delta_lon = future_lon - T0_lon
+  # Longitude convention: degrees East [-180, 180] or [0, 360]
+  # Wraparound check enforced: |delta_lon| > 180 triggers a QC flag.
+  longitude_convention: "degrees_east_0_to_360"
+  wraparound_threshold_deg: 180.0
+  future_columns:
+    lat:
+      t3h: "target_lat_t3"
+      t6h: "target_lat_t6"
+      t12h: "target_lat_t12"
+      t24h: "target_lat_t24"
+    lon:
+      t3h: "target_lon_t3"
+      t6h: "target_lon_t6"
+      t12h: "target_lon_t12"
+      t24h: "target_lon_t24"
+  delta_columns:
+    t3h: ["delta_lat_t3h", "delta_lon_t3h"]
+    t6h: ["delta_lat_t6h", "delta_lon_t6h"]
+    t12h: ["delta_lat_t12h", "delta_lon_t12h"]
+    t24h: ["delta_lat_t24h", "delta_lon_t24h"]
+  absolute_columns:
+    t3h: ["future_lat_t3h", "future_lon_t3h"]
+    t6h: ["future_lat_t6h", "future_lon_t6h"]
+    t12h: ["future_lat_t12h", "future_lon_t12h"]
+    t24h: ["future_lat_t24h", "future_lon_t24h"]
+  validity_mask_columns:
+    t3h: "track_valid_t3h"
+    t6h: "track_valid_t6h"
+    t12h: "track_valid_t12h"
+    t24h: "track_valid_t24h"
+  qc:
+    # Max physically plausible displacement per 3h step
+    # ~200 km / 3h ≈ 1.8° lat (cyclone speed ~66 km/h max)
+    max_delta_deg_per_3h: 3.0
+    max_delta_deg_per_6h: 6.0
+    max_delta_deg_per_12h: 12.0
+    max_delta_deg_per_24h: 24.0
+
+# ------------------------------------------------------------
+# OUTPUT PATHS
+# ------------------------------------------------------------
+output:
+  targets_dir: "data/processed/targets"
+  targets_manifest_filename: "targets_manifest.csv"
+  targets_manifest_train: "targets_manifest_train.csv"
+  targets_manifest_val: "targets_manifest_val.csv"
+  targets_manifest_test: "targets_manifest_test.csv"
+  quality_report_filename: "target_quality_report.json"
+  step15_report_path: "data/processed/sequences/step15_report.json"

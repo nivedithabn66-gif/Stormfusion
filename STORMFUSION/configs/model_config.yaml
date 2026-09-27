@@ -1,0 +1,102 @@
+# STORMFUSION Step 8A Model Configuration
+
+satellite_encoder:
+  backbone: resnet18
+  pretrained: false
+  input_channels: 3
+  feature_dim: 128
+  spatial_channels: 512
+
+convlstm:
+  num_layers: 1
+  hidden_channels: 64
+  kernel_size: 3
+
+input:
+  sequence_length: 8
+  channels:
+    - TIR1
+    - WV
+    - TIR2
+  height: 500
+  width: 500
+
+track_encoder:
+  input_dim: 8
+  hidden_dim: 64
+  num_layers: 1
+
+era5_encoder:
+  input_channels: 4
+  hidden_channels: 32
+  embedding_dim: 64
+
+fusion:
+  embedding_dim: 64
+  gate_hidden_dim: 32
+  epsilon: 1.0e-8
+
+multitask:
+  shared_dim: 64
+  dropout: 0.2
+  pattern_classes: 4
+  forecast_horizons:
+    - 3
+    - 6
+    - 12
+    - 24
+
+loss:
+  detection_weight: 1.0
+  pattern_weight: 0.0  # Temporarily disabled: awaiting verified Eye/Curved Band/Shear/CDO consensus labels
+  intensity_weight: 1.0
+  pressure_weight: 1.0
+  track_weight: 1.0
+  huber_delta: 1.0
+
+training:
+  seed: 42
+  device: auto
+  optimizer:
+    name: adamw
+    learning_rate: 0.0001
+    weight_decay: 0.0001
+  scheduler:
+    name: cosine
+    warmup_epochs: 5
+    min_lr: 0.000001
+  gradient_clip_norm: 1.0
+  early_stopping:
+    enabled: true
+    patience: 10
+    min_delta: 0.0001
+
+paths:
+  report_step8a_output_path: "data/processed/sequences/step8a_baseline_report.json"
+  report_step8b_output_path: "data/processed/sequences/step8b_report.json"
+  report_step8c_output_path: "data/processed/sequences/step8c_report.json"
+  report_step9_output_path: "data/processed/sequences/step9_report.json"
+  report_step10a_output_path: "data/processed/sequences/step10a_report.json"
+  report_step10b_prep_output_path: "data/processed/sequences/step10b_prep_report.json"
+  report_step11_output_path: "data/processed/sequences/step11_report.json"
+  report_step12_output_path: "data/processed/sequences/step12_report.json"
+  report_step13_output_path: "data/processed/sequences/step13_report.json"
+  report_step14_output_path: "data/processed/sequences/step14_report.json"
+  report_step18_output_path: "data/processed/sequences/step18_report.json"
+
+uncertainty:
+  mc_dropout_samples: 20
+  prediction_intervals:
+    - 0.50
+    - 0.80
+    - 0.90
+  ece_bins: 10
+  calibration_split_isolation: true
+
+
+
+
+
+
+
+

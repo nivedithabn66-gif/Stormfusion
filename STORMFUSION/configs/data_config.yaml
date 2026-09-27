@@ -1,0 +1,31 @@
+# STORMFUSION Data Configuration
+
+ibtracs:
+  url: "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/netcdf/IBTrACS.ALL.v04r01.nc"
+  raw_dir: "data/raw/ibtracs"
+  processed_dir: "data/processed/tracks"
+  raw_filename: "IBTrACS.ALL.v04r01.nc"
+  catalog_filename: "storm_catalog.csv"
+  clean_tracks_filename: "ibtracs_nio_clean.csv"
+  metadata_filename: "ibtracs_metadata.json"
+  
+  # Target Basin Configuration
+  # In IBTrACS v04, 'NI' represents North Indian Ocean.
+  # Sub-basins like 'BB' (Bay of Bengal) and 'AS' (Arabian Sea) may also be present.
+  nio_basins:
+    - "NI"
+    - "BAY"
+    - "ARB"
+    - "BB"
+    - "AS"
+
+  # Basic Quality Control Thresholds
+  qc:
+    lat_min: -90.0
+    lat_max: 90.0
+    lon_min: -180.0
+    lon_max: 360.0
+    wind_min_kts: 0.0
+    wind_max_kts: 250.0  # Max physical wind threshold (knots)
+    pressure_min_hpa: 800.0  # Min physical pressure threshold (hPa)
+    pressure_max_hpa: 1050.0 # Max physical pressure threshold (hPa)

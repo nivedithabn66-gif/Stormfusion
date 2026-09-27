@@ -1,0 +1,54 @@
+# STORMFUSION ERA5 Atmospheric Data Configuration
+
+dataset:
+  name: ERA5
+  source: Copernicus Climate Data Store (CDS)
+  dataset_id: reanalysis-era5-single-levels
+  temporal_resolution: 3h
+
+variables:
+  surface:
+    - 10m_u_component_of_wind
+    - 10m_v_component_of_wind
+    - mean_sea_level_pressure
+    - 2m_temperature
+
+  optional:
+    - total_column_water_vapour
+
+pressure_levels:
+  enabled: false
+  dataset_id: reanalysis-era5-pressure-levels
+  levels:
+    - 850
+    - 500
+    - 200
+  variables:
+    - u_component_of_wind
+    - v_component_of_wind
+    - geopotential
+
+region:
+  north: 30
+  south: 0
+  west: 60
+  east: 100
+
+sampling:
+  interval_hours: 3
+  test_timesteps: 12
+
+alignment:
+  storm_source: IBTrACS
+  storm_id: "2019116N02090"
+  storm_name: "FANI"
+
+storage:
+  raw_dir: data/raw/era5
+  processed_dir: data/processed/atmosphere
+  raw_filename: era5_fani_test.nc
+  manifest_filename: era5_test_manifest.csv
+  metadata_filename: era5_test_metadata.json
+
+credentials:
+  use_environment_variables: true

@@ -1,0 +1,122 @@
+# STORMFUSION EUMETSAT IODC Satellite Data Configuration
+# SIH Problem Statement: SIH26070
+
+eumetsat:
+  # Official EUMETSAT Data Store Endpoints
+  token_url: "https://api.eumetsat.int/token"
+  browse_url: "https://api.eumetsat.int/data/browse/1.0.0"
+  search_url: "https://api.eumetsat.int/data/search-products/1.0.0/os"
+  download_url: "https://api.eumetsat.int/data/download/1.0.0"
+  user_portal_url: "https://user.eumetsat.int"
+  api_key_url: "https://api.eumetsat.int/api-key/"
+
+  # Client and Request Configuration
+  timeout_seconds: 45
+  retry_count: 3
+  backoff_factor: 2.0
+  max_concurrent_downloads: 4
+
+# Target Satellite Constellation & Coverage
+satellites:
+  - "Meteosat-9"   # Primary IODC operational satellite at 45.5°E (2022–present)
+  - "Meteosat-8"   # Historical IODC operational satellite at 41.5°E (2016–2022)
+
+# Official EUMETSAT Data Store Collections for Indian Ocean Data Coverage (IODC)
+collections:
+  primary:
+    collection_id: "EO:EUM:DAT:MSG:HRSEVIRI-IODC"
+    title: "High Rate SEVIRI Level 1.5 Image Data - MSG - Indian Ocean Data Coverage"
+    description: "Geolocated and radiometrically calibrated Level 1.5 image data from SEVIRI covering North Indian Ocean"
+    temporal_frequency_min: 15
+    spatial_resolution_nadir_km: 3.0
+    coverage:
+      lat_min: -40.0
+      lat_max: 40.0
+      lon_min: 10.0
+      lon_max: 110.0
+      nio_target: "North Indian Ocean (0N-35N, 45E-105E)"
+
+# Channel Mapping: EUMETSAT SEVIRI -> STORMFUSION Common Satellite Tensor
+# STORMFUSION expects [T=8, C=3, H=500, W=500]
+channels:
+  model_channel_0:
+    name: "TIR1"
+    seviri_channel: "IR_108"
+    wavelength_um: 10.8
+    band_id: 9
+    description: "Thermal Infrared Window (Cloud top temperature, cyclone eye structure)"
+    unit: "Kelvin"
+    min_physical_val: 160.0
+    max_physical_val: 330.0
+    missing_behavior: "QC_FAIL_OBSERVATION"
+
+  model_channel_1:
+    name: "WV"
+    seviri_channel: "WV_062"
+    wavelength_um: 6.25
+    band_id: 5
+    description: "Water Vapor Channel (Upper tropospheric moisture, jet streams, vortex dynamics)"
+    unit: "Kelvin"
+    min_physical_val: 170.0
+    max_physical_val: 270.0
+    missing_behavior: "QC_FAIL_OBSERVATION"
+
+  model_channel_2:
+    name: "TIR2"
+    seviri_channel: "IR_120"
+    wavelength_um: 12.0
+    band_id: 10
+    description: "Split-window Thermal Infrared (Atmospheric moisture correction, deep convection)"
+    unit: "Kelvin"
+    min_physical_val: 160.0
+    max_physical_val: 330.0
+    missing_behavior: "QC_FAIL_OBSERVATION"
+
+# Spatial Standardization
+spatial:
+  crop_size: [500, 500]
+  target_resolution_km: 4.0
+  box_size_deg: 18.0   # ~2000 km box centered on storm eye
+  projection: "equirectangular"
+
+# Quality Control Gates
+qc:
+  max_missing_pixel_fraction: 0.20
+  allow_interpolation: false
+  temporal_strict_monotonic: true
+  max_timestamp_jitter_seconds: 900
+
+# Path Settings
+paths:
+  raw_dir: "data/raw/eumetsat/iodc"
+  processed_dir: "data/processed/satellite"
+  verified_manifest: "data/processed/satellite/eumetsat_verified_manifest.csv"
+  provenance_report: "data/processed/satellite/eumetsat_provenance.json"
+  norm_stats: "data/processed/normalization/eumetsat_norm_stats.json"
+
+# Priority 1 Historical Acquisition Plan: Cyclone FANI (2019)
+# Ready to execute immediately upon EUMETSAT GeneralLicense authorization
+fani_2019_target:
+  storm_name: "FANI"
+  ibtracs_sid: "2019116N02090"
+  season: 2019
+  period_utc:
+    start: "2019-04-25T00:00:00Z"
+    end: "2019-05-04T23:59:59Z"
+  platform: "Meteosat-9 / MSG2"
+  instrument: "SEVIRI"
+  collection_id: "EO:EUM:DAT:MSG:HRSEVIRI-IODC"
+  processing_level: "Level 1.5"
+  channels:
+    - "WV_062"
+    - "IR_108"
+    - "IR_120"
+  spatial_crop: [500, 500]
+  sequence_frames: 8
+  min_unique_timestamps: 8
+  temporal_tolerance_minutes: 30
+  era5_reference: "data/raw/era5/ERA5_FANI_2019_controlled.nc"
+  split: "train"
+  storm_group_id: "2019116N02090_FANI"
+  acquisition_status: "READY_TO_ACQUIRE_UPON_LICENSE_APPROVAL"
+

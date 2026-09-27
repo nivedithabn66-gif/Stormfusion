@@ -1,0 +1,69 @@
+# STORMFUSION Step 7 Dataset & DataLoader Configuration
+
+dataset:
+  sequence_length: 8
+  interval_hours: 3
+  history_hours: 24
+
+satellite:
+  enabled: true
+  provider: "eumetsat_iodc"  # 'eumetsat_iodc' for target NIO satellite data, 'noaa' for dev/pretraining
+  providers:
+    eumetsat_iodc:
+      enabled: true
+      purpose: "nio_satellite"
+    noaa:
+      enabled: true
+      purpose: "development_pretraining"
+  channels:
+    - TIR1
+    - WV
+    - TIR2
+  crop_size: [500, 500]
+  image_resolution_km: 4.0
+  norm_status: "TRAIN_SPLIT_ISOLATED"
+
+track:
+  enabled: true
+  features:
+    - latitude
+    - longitude
+    - delta_lat
+    - delta_lon
+    - motion_speed
+    - motion_direction
+    - intensity
+    - pressure
+    - valid_flag
+
+environment:
+  era5: true
+  era5_channels:
+    - u10
+    - v10
+    - msl
+    - t2m
+  oisst: false
+
+targets:
+  track_leads_hours:
+    - 3
+    - 6
+    - 12
+    - 24
+  target_variables:
+    - detection
+    - pattern
+    - intensity
+    - pressure
+    - future_track
+
+paths:
+  manifest_path: "data/processed/sequences/sequence_manifest.csv"
+  tracks_path: "data/processed/tracks/ibtracs_nio_clean.csv"
+  split_metadata_path: "data/splits/split_metadata.json"
+  noaa_verified_manifest_path: "data/processed/satellite/noaa_verified_manifest.csv"
+  eumetsat_verified_manifest_path: "data/processed/satellite/eumetsat_verified_manifest.csv"
+  eumetsat_report_path: "data/processed/satellite/eumetsat_verification_report.json"
+  report_output_path: "data/processed/sequences/step7_dataloader_report.json"
+
